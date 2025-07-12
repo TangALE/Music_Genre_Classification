@@ -1,0 +1,229 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2022_conference,times}
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+
+%######## APS360: Uncomment your submission name
+\newcommand{\apsname}{Project Proposal}
+%\newcommand{\apsname}{Progress Report}
+%\newcommand{\apsname}{Final Report}
+
+%######## APS360: Put your Group Number here
+\newcommand{\gpnumber}{13}
+
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\Urlmuskip=0mu plus 1mu
+
+
+%######## APS360: Put your project Title here
+\title{Formatting Instructions for APS360 Project  \\ 
+based on ICLR Conference Format}
+
+
+%######## APS360: Put your names, student IDs and Emails here
+\author{Allen Tang\\
+Student\# 1010191846\\
+\texttt{allenn.tang@mail.utoronto.ca} \\
+\And
+Ruian Zhao  \\
+Student\# 1010243880 \\
+\texttt{ruian.zhao@mail.utoronto.ca} \\
+\AND
+Daniel Zheng  \\
+Student\# 1010010177 \\
+\texttt{danielzj.zheng@mail.utoronto.ca} \\
+\And
+Josie Ren \\
+Student\# 1010346458 \\
+\texttt{josie.ren@mail.utoronto.ca} \\
+\AND
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\iclrfinalcopy 
+%######## APS360: Document starts here
+\begin{document}
+
+
+\maketitle
+
+\begin{abstract}
+Music genre classification is critical for music information retrieval and personalized recommendation systems, enabling efficient organization of digital music. This project explores a deep learning approach for automatic music genre classification using spectrograms, aiming to classify as many genres as possible with maximum accuracy. By converting audio tracks into Mel spectrograms and treating them as image inputs, Convolutional Neural Networks (CNNs) can be leveraged to detect complex audio patterns linked to musical features such as rhythm and harmony. The model will be trained on a filtered subset of the Free Music Archive (FMA) dataset, alongside a weighted loss function to mitigate genre bias. Performance bottlenecks will be optimized using novel loss functions like PEDCC-Loss and AM-softmax. Additionally, the Modified Electric Eel Foraging Optimization (MEEFO) algorithm will be used to accelerate hyperparameter tuning. Finally, ethical considerations like the risk of racial bias stemming from spectrogram-based features or representational biases due to a Western-dominated dataset limit the model’s ability to accurately classify diverse musical styles.
+%######## APS360: Do not change the next line. This shows your Main body page count.
+----Total Pages: \pageref{last_page}
+\end{abstract}
+
+
+
+\section{Introduction}
+
+Music genre classification is a fundamental task in the fields of music information retrieval and recommendation systems. Automatically identifying the genre of a song has practical applications in music streaming platforms, personalized playlist generation, and digital archiving \citep{spotify_ai_dj}. The goal of our project is to develop a deep learning model that classifies audio clips into their respective genres using labelled spectrograms as training input. Spectrograms provide a time-frequency representation of audio signals, making them appropriate for visual pattern recognition techniques such as Convolutional Neural Networks (CNNs) \citep{doshi_mel_spectrogram}. By treating spectrograms as images, we can use CNN architectures to learn features that correspond to rhythm, harmony, and other musical attributes relevant to genre classification \citep{wikipedia_spectrogram}. This task is especially important in the digital age, where it is almost impossible to manually label the vast and continuously growing amount of music available. Rule-based systems often fail to label the nuanced features of music, and traditional machine learning methods require handcrafted features, which are time-consuming and limited in scope. In contrast, deep learning offers an end-to-end solution that can learn from raw audio data and discover complex patterns automatically \citep{stihec_ai_weapon}. Therefore, deep learning is a reasonable and effective approach to this problem because it eliminates the need for manual feature engineering and can be generalized across diverse musical styles. Deep neural networks can learn complex mappings from high-dimensional inputs to class labels, making them ideal for tasks such as genre recognition, where the underlying patterns are nonlinear.
+
+
+\section{Illustration}
+
+The following figure 1 illustrates the components of the proposed model.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{model.jpeg}
+  \caption{The components of the overall model}
+  \label{fig:model_components}
+\end{figure}
+
+\section{Background \& Related Work}
+
+Music genre classification is a well-researched area in the field of information retrieval. A music genre classification model can be used in music recommendation systems, auto-generated playlists, and market analysis, identifying popular genres for music producers.
+
+As early as 2002, traditional machine learning approaches have been developed for music genre classification. Tzanetakis and Cook extracted features like timbral texture, pitch and rhythmic content from audio files before feeding them into traditional machine learning classifiers like KNN and Gaussian mixture models. They achieved a classification accuracy of 63\%, which was comparable to human performance at the time \citep{tzanetakis2002}. The dataset developed in the research was widely used in subsequent studies and is regarded as the famous GTZAN dataset.
+
+Deep learning approaches later emerged in the 2010s. One such example is a convolutional recurrent neural network, which replaces the last layer of a CNN model with an RNN and has proven to be more effective than pure CNNs in music genre classification \citep{choi2017crnn}.
+
+In 2025, Zhang and Li proposed a parallel CNN ensemble model that integrates three CNN models handling features from discrete wavelet transform, Mel frequency spectral coefficients, and short-time Fourier transform of audio files \citep{zhang2025ensemble}. As a result, they achieved a classification accuracy of 96.07\% on the GTZAN dataset.
+
+In addition to academic advancements, music genre classification softwares also emerged in the market. One such example is Cyanite, which provides a comprehensive music sorting solution by automatically retrieving a song’s BPM, genre, emotion and key descriptions \citep{cyanite_ai}. Cyanite uses a similar approach to ours by converting audio files into spectrograms for inputs before generating descriptive tags based on perceived patterns.
+
+Research in recent years has further advanced in deep learning approaches. In 2018, Oramas et al.\ proposed a multimodal approach, taking in audio, text reviews, and cover art pictures as input for music genre classification. The results showed that the combination of multiple modalities yields a higher accuracy than one modality in isolation \citep{oramas2018multimodal}. This opens the possibility of using multiple modes of data to train our model for genre classification to boost accuracy or mitigate bias across data.
+
+
+\section{Data Processing}
+
+The dataset we are using will be the Free Music Archive (FMA) dataset \citep{fma_dataset}. The full dataset contains 106,574 tracks with 16 different top-level genres and 161 sub-genres. However, the complete dataset is 879 gigabytes, which is too large to train with. The FMA Large subset will be used instead, which contains the same tracks trimmed down to 30-second snippets. Along with the dataset, the FMA repository includes a metadata folder listing all the songs and their corresponding genres, helping with data organization and classification.
+
+Upon examining the metadata, not all songs had their genres labeled. After using the \texttt{pandas} Python package to remove all rows without labels, the dataset was reduced to approximately 50,000 tracks(see Table~\ref{tab:genre_counts} below for the genres available, and their track count). However, the genre distribution remained unbalanced, with only 7 genres containing over 2,000 tracks. Since our goal is to classify as many genres as possible, we will use a weighted loss function that penalizes the model more heavily when it fails to classify underrepresented genres to prevent overfitting on genres with more data \citep{tantai_weighted}. Since 12 genres have at least 400 tracks, we have decided to have a minimum and maximum of 400 and 2,500 tracks per genre, respectively, allowing us to have about 20,000 tracks to train our model with.
+
+\begin{table}[h]
+\centering
+\caption{Track count by genre in the FMA dataset}
+\label{tab:genre_counts}
+\begin{tabular}{lr}
+\toprule
+\textbf{Genre} & \textbf{Track Count} \\
+\midrule
+Rock                & 14,182 \\
+Experimental        & 10,608 \\
+Electronic          & 9,372 \\
+Hip-Hop             & 3,552 \\
+Folk                & 2,803 \\
+Pop                 & 2,332 \\
+Instrumental        & 2,079 \\
+International       & 1,389 \\
+Classical           & 1,230 \\
+Jazz                & 571 \\
+Old-Time / Historic & 554 \\
+Spoken              & 423 \\
+Country             & 194 \\
+Soul-RnB            & 175 \\
+Blues               & 110 \\
+Easy Listening      & 24 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+We will take the following steps to format the data:
+
+\begin{enumerate}
+    \item To select the tracks for each genre, you must iterate through the folders that contain the tracks using the \texttt{os} Python package.
+    \item Compare the file names to the track IDs provided in the \texttt{tracks.csv} metadata file to obtain each song’s top genre.
+    \item Add each specified song’s file path to a corresponding list based on its genre. 
+    \item Use the \texttt{librosa} package to convert each song into a Mel spectrogram, which is a 2D time-frequency image suitable for training a CNN \citep{doshi_mel_spectrogram}.
+    \item Convert each Mel spectrogram into PyTorch tensors and store them in respective lists by genre.
+    \item Use the \texttt{scikit-learn} package to split each genre into 70\% training, 15\% validation, and 15\% testing using the \texttt{train\_test\_split()} function \citep{buhl_split}.
+\end{enumerate}
+
+To achieve the highest training accuracy with respect to the data, we will use Mel spectrograms with 512 frequency bands, similar to an experiment performed by Cheuk et al.\ \citep{cheuk2020impactaudioinputrepresentations}. This can be done by tuning the \texttt{n\_mels} hyperparameter in the \texttt{librosa} package. Although log-frequency constant-Q transforms (CQT) have shown higher accuracy in some cases, their significantly larger size (e.g., using 2,048 or 4,096 frequency bands) increases training costs without yielding proportionally better results in transcription accuracy \citep{cheuk2020impactaudioinputrepresentations}.
+
+
+\section{Architecture}
+
+The architecture for this model will be a CNN instead of a Recurrent Neural Network (RNN). This is because CNNs are generally better at detecting local features and processing input data simultaneously, making this neural network optimal for the spectrogram representation of songs \citep{kalra2023cnn_imageclass}. Based on a study done by Jiménez and José, CRNNs (which combine features of CNNs and RNNs) tend to overfit too quickly in comparison to CNNs, making training potentially unstable \citep{jimenez2020genre}. Furthermore, Dense Neural Networks (DNNs), despite being easier to train, lack the accuracy that CNNs can achieve, making them unsuitable as well \citep{landschoot2020github}.
+
+The activation function for the model will be \( f(x) = -x \cdot \mathrm{erf}(e^{-x}) \), where \(\mathrm{erf}()\) is the Gaussian error function(see the linked Wikipedia page for more information) \citep{wikipedia_error_function}. This functionw as chose as it  outperformed current industry functions in 92.8\% of the 28 studied cases \citep{RAHMAN2024112502}. The optimizing function and classifying functions will use the Adam optimizer, as it is the current default choice for many CNNs \citep{rafalski2025cnnopt}. Finally, the loss function is the PEDCC-Loss combined with the AM-Softmax function, which achieved the highest accuracy across all experiments conducted by Zhu et al.\ \citep{DBLP:journals/corr/abs-1904-06008}.
+
+Another proposed loss function to address bias within the dataset is to use a weighted Cross Entropy Loss (CEL) function, since there are some genres with fewer songs than others in the dataset. The weight for each genre will be calculated as the total number of samples divided by the number of samples in its respective genre. For example, out of 1,000 samples, “Class B” may have 800, so its weight would be \(1000 / 800 = 1.25\) \citep{tantai_weighted}.
+
+The hyperparameters can be further optimized using the Modified Electric Eel Foraging Optimization algorithm (MEEFO). This algorithm allows the model to be trained more effectively and may be more beneficial than similar training algorithms like the Black Hole Optimization Algorithm (BHO). MEEFO avoids early solution convergence \citep{zhang2025zfnet}, allowing the model to explore more solutions and better optimize performance. The implementation of the model will follow the approach outlined by Maged et al.\ in Section 4 \citep{MAGED2024102855}.
+
+
+
+\section{Baseline Model}
+
+The baseline model will follow closely with the one developed by Landschoot et al.\ (2023) \citep{landschoot2020github}. The baseline model must be a multinomial regression model, since there are multiple genres of music to be classified \citep{jesussek2023logistic}. The original baseline model uses the LBFGS solver as the optimization function \citep{landschoot2020github}. 
+
+The baseline model will be implemented using the \texttt{LogisticRegressionCV} function from \texttt{scikit-learn} \citep{scikit_learn_website}, where the \texttt{multi\_class} parameter is set to \texttt{"multinomial"} and the solver is \texttt{"lbfgs"}. This model is expected to achieve an accuracy of approximately 53\% \citep{landschoot2020github}, which serves as a useful benchmark to determine whether our implementation is consistent with previously reported outcomes.
+
+\section{Ethical Concerns}
+
+Mel spectrograms emphasize frequencies that are more aligned with how the human ear perceives sound \citep{landschoot2020github}. This means that different vocal tones, accents, or speech cadences that are common across different ethnic groups can appear as distinct frequency patterns. If a model is trained on a dataset where these patterns are consistently labeled under certain genres, such as deeper male voices or specific speech patterns being linked to rap or hip-hop, the model might start using these surface-level cues to make predictions. A song could therefore be classified as “rap” not because of its musical structure, instrumentation, or intent, but because of how the artist’s voice appears visually in the spectrogram. This introduces the risk of racial bias, as the model may reinforce stereotypes embedded in the training data. Over time, such a model could misrepresent artists: particularly those creating genre-bending work like Tyler the Creator’s \textit{Igor} album by categorizing them as rap despite the album’s diverse and cross-genre sound.
+
+Another ethical concern lies in the dataset itself. The current dataset was selected primarily for its large volume of labeled examples; however, it consists predominantly of Western music genres. This imbalance may cause the model to generalize poorly on non-Western music, perpetuating a Western-centric bias in genre classification. To mitigate this, we will apply weighted loss functions that penalize misclassifications more heavily for underrepresented genres. This strategy aims to reduce overfitting to dominant classes and improve the model’s ability to generalize across a broader spectrum of musical traditions.
+
+
+\section{Project Plan}
+
+Our team will work remotely as one teammate is located in Australia. To organize effective collaboration across time zones, Discord is the primary source of communication. Depending on team availability, we plan to meet at least twice a week: once on either Saturday or Sunday, and once on Wednesday or Thursday. During these meetings, we will review progress, align our goals, and delegate upcoming tasks as we progress through the project. To ensure the code is not overwritten, Google Colab will be linked to GitHub for version control and branch management. See Table~\ref{tab:deliverables} below for the deliverables and deadlines assigned to each member. Attached is the \href{https://drive.google.com/drive/folders/1QGxYpoasWKFKUcYMxIBiFAGk11h4XRYb?usp=sharing}{Google folder} containing the Colab notebook, and the \href{https://github.com/TangALE/Music_Genre_Classification}{GitHub repository}.
+
+
+\begin{table}[h]
+\centering
+\caption{Task delegation and expected timelines for each task}
+\label{tab:deliverables}
+\begin{tabular}{lll}
+\toprule
+\textbf{Deliverable} & \textbf{Deadline} & \textbf{Member} \\
+\midrule
+Team Formation & DONE & -N/A- \\
+Project Proposal & June 13th & Everyone \\
+Intro, Illustration & DONE & Josie \\
+Background (4) & DONE & Allen \\
+Data Processing, Risk Register & DONE & Ruian \\
+Architecture, Baseline Model, Ethical Considerations & DONE & Daniel \\
+Project Plan (4) & DONE & All members \\
+Data Processing & June 20 & Ruian \\
+MEEFO algo (hyperparameter tuning) & July 12 & Ruian \\
+CNN Model (layers, activation function, optimizer function) & June 30 & Daniel \\
+Testing against Baseline Model & July 12 & Allen \\
+Creating a Baseline Model & June 30 & Allen \\
+CNN Model Loss & June 30 & Josie \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Risk Register}
+
+\textbf{Colab Session Timeouts (High Likelihood):} \\
+Colab sessions automatically time out after 12 hours, so we will checkpoint our model periodically (every hour or so) in case it times out during training. This way, the current weights and progress are saved, and significant work will not be lost when session timeouts occur. Preprocessing the data beforehand, prior to using Google Colab, will also save time and help avoid training interruptions.
+
+\textbf{Team Member Drops Out/Emergency (Medium Likelihood):} \\
+This situation may arise if a team member drops the course, experiences a family emergency, or is otherwise unable to complete their assigned work. We will manage the situation by dividing tasks evenly and setting internal deadlines at least three days ahead of the course deadlines. This buffer allows time to address availability issues and enables other team members to step in if needed. Furthermore, our twice-weekly meetings facilitate communication of any issues early on, helping us adapt and plan accordingly.
+
+\textbf{Model Training Takes Too Long (High Likelihood):} \\
+If the model takes too long to train, it may result in an incomplete or non-functional version by the end of the project. To mitigate this risk, we will start by training smaller models with fewer epochs and layers to test performance. This will allow us to gauge the minimum architectural requirements and apply additional optimizations such as spectrogram resizing or hyperparameter tuning to keep training time within acceptable limits.
+
+\textbf{Genre Data Imbalance (High Likelihood):} \\
+Several genres in our dataset contain fewer than 2,000 songs, while others have over 10,000. This imbalance could cause the model to overfit to the dominant genres and fail to generalize well. To address this, we apply a weighted loss function that penalizes the model more heavily for misclassifying underrepresented genres \citep{tantai_weighted}.
+
+
+
+\label{last_page}
+
+\bibliography{APS360_ref_cleaned}
+\bibliographystyle{iclr2022_conference}
+
+\end{document}
